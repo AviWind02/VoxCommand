@@ -1,11 +1,15 @@
 ﻿using AudioSwitcher.AudioApi.CoreAudio;
 using System;
+using System.Text.RegularExpressions;
+using System.Threading;
+using VoxCommand.Speech_Class;
 
 namespace VoxCommand.Other_Class
 {
     internal class VolumeControl
     {
         private CoreAudioDevice defaultPlaybackDevice;
+
 
         public VolumeControl()
         {
@@ -56,6 +60,68 @@ namespace VoxCommand.Other_Class
         {
             defaultPlaybackDevice.SetMuteAsync(mute).Wait(); 
             Console.WriteLine($"Mute state set to: {mute}.");
+        }
+        public static void AdjustVolumeBasedOnCommand(string command)
+        {
+            VolumeControl volumeControl = new VolumeControl();
+
+            // Extract the first number from the command
+            var match = Regex.Match(command, @"\d+");
+            int volumeChangePercentage = match.Success ? int.Parse(match.Value) : 10; // Default to 10 if no number found
+
+            // Retrieve current volume
+            double currentVolume = volumeControl.GetVolume();
+
+            // Calculate new volume based on the command
+            double newVolume = 0;
+            if (command.Contains("increase volume"))
+            {
+                newVolume = currentVolume + (currentVolume * (volumeChangePercentage / 100.0));
+                newVolume = Math.Min(newVolume, 100); // Ensure the volume does not exceed 100%
+                Speech_recognition.synthesizer.Speak($"Increasing volume by {volumeChangePercentage}%, new volume: {Math.Round(newVolume)}%.");
+            }
+            else if (command.Contains("decrease volume"))
+            {
+                newVolume = currentVolume - (currentVolume * (volumeChangePercentage / 100.0));
+                newVolume = Math.Max(newVolume, 0); // Ensure the volume does not go below 0%
+                Speech_recognition.synthesizer.Speak($"Decreasing volume by {volumeChangePercentage}%, new volume: {Math.Round(newVolume)}%.");
+            }
+            else if(command.Contains("set volume"))
+            {
+                Speech_recognition.synthesizer.Speak($"Setting volume to {volumeChangePercentage}%.");
+                newVolume = volumeChangePercentage;
+            }
+            else if (command.Contains("mute volume"))
+            {
+                if(volumeControl.defaultPlaybackDevice.IsMuted)
+                {
+                    Speech_recognition.synthesizer.Speak($"Volume already muted.");
+                    return;
+                }
+
+                Speech_recognition.synthesizer.Speak($"muting volume.");
+                volumeControl.MuteVolume(true);
+            }
+            else if (command.Contains("unmute volume"))
+            {
+                if (!volumeControl.defaultPlaybackDevice.IsMuted)
+                {
+                    Speech_recognition.synthesizer.Speak($"Volume already unmuted.");
+                    return;
+                }
+                Speech_recognition.synthesizer.Speak($"unmuting volume.");
+                volumeControl.MuteVolume(false);
+            }
+            else
+            {
+                Speech_recognition.synthesizer.Speak("Could not determine the volume change action required.");
+                Console.WriteLine("No action (increase/decrease) specified in the command.");
+                return;
+            }
+
+            // Set the new volume
+            volumeControl.SetVolume(newVolume);
+
         }
     }
 }

@@ -7,6 +7,9 @@ using System.Linq;
 using VoxCommand.Retriever_Class;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
+using VoxCommand.Other_Class;
+using System.Threading;
 
 namespace VoxCommand.Speech_Class
 {
@@ -15,7 +18,7 @@ namespace VoxCommand.Speech_Class
 
         private Executables executablesclass;
 
-        private static System.Speech.Synthesis.SpeechSynthesizer synthesizer;
+        public static System.Speech.Synthesis.SpeechSynthesizer synthesizer;
         private static Dictionary<string, string> appCommands;
         private static List<string> grammarPhrases = new List<string>();
 
@@ -58,15 +61,26 @@ namespace VoxCommand.Speech_Class
                 {
                     if (!string.IsNullOrEmpty(appCommand.Value))
                     {
-                        foreach (var executable in executablesclass.executables)
+                        if (appCommand.Value == "VOL_EXECUTABLE")
                         {
-                            grammarPhrases.Add($"{executable} {appCommand.Key}");
-                            Console.WriteLine($"Added Executable: {executable} to App command: {appCommand} = {executable} {appCommand.Key}");
+                           for (int i = 1; i <= 100; i++)
+                           {
+                                grammarPhrases.Add($"{appCommand.Key} {i}");
+                                Console.WriteLine($"Added Executable for volume: {appCommand.Key} {i}");
+                           }
+                        }
+                        else
+                        {// All the Open, Close, and Kill executable
+                            foreach (var executable in executablesclass.executables)
+                            {
+                                grammarPhrases.Add($"{executable} {appCommand.Key}");
+                                Console.WriteLine($"Added Executable: {executable} to App command: {appCommand} = {executable} {appCommand.Key}");
+                            }
                         }
 
                     }
                     else
-                    {
+                    {// All the other custom executable such as show steam lib or search
                         // Skip the special command
                         Console.WriteLine($"Added special command: {appCommand.Key}");
                         grammarPhrases.Add(appCommand.Key);
@@ -127,6 +141,10 @@ namespace VoxCommand.Speech_Class
                     synthesizer.Speak("What would you like to search for?");
                     commandProcessed = true;
                     commandProcessedSearch = true;
+                }
+                else if (command.StartsWith("increase volume") || command.StartsWith("decrease volume") || command.StartsWith("set volume to") || command.StartsWith("mute volume") || command.StartsWith("unmute volume"))
+                {
+                    VolumeControl.AdjustVolumeBasedOnCommand(command); 
                 }
                 else if (command.StartsWith("show me") || command.StartsWith("list") || command.StartsWith("show"))
                 {
@@ -227,6 +245,15 @@ namespace VoxCommand.Speech_Class
             appCommands.Add("next song", null);
             appCommands.Add("Go back", null);
 
+            appCommands.Add("increase volume by", "VOL_EXECUTABLE");
+            appCommands.Add("lower volume by", "VOL_EXECUTABLE");
+            appCommands.Add("set volume to", "VOL_EXECUTABLE");
+            appCommands.Add("increase volume", null);
+            appCommands.Add("lower volume", null);
+            appCommands.Add("mute volume", null);
+            appCommands.Add("unmute volume", null);
+
+
 
             appCommands.Add("show me steam games", null);
             appCommands.Add("list steam games", null);
@@ -244,6 +271,8 @@ namespace VoxCommand.Speech_Class
 
 
         }
+
+   
 
         private static string RemoveCommandPrefix(string command, string[] prefixes)
         {
