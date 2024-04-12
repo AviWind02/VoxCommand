@@ -34,6 +34,7 @@
             this.buttonMute = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.buttonClearLog = new System.Windows.Forms.Button();
+            this.buttonTest = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -97,11 +98,22 @@
             this.buttonClearLog.UseVisualStyleBackColor = false;
             this.buttonClearLog.Click += new System.EventHandler(this.buttonClearLog_Click);
             // 
-            // UserForm
+            // buttonTest
+            // 
+            this.buttonTest.Location = new System.Drawing.Point(377, 415);
+            this.buttonTest.Name = "buttonTest";
+            this.buttonTest.Size = new System.Drawing.Size(75, 23);
+            this.buttonTest.TabIndex = 6;
+            this.buttonTest.Text = "Test";
+            this.buttonTest.UseVisualStyleBackColor = true;
+            this.buttonTest.Click += new System.EventHandler(this.buttonTest_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.buttonTest);
             this.Controls.Add(this.buttonExit);
             this.Controls.Add(this.buttonMute);
             this.Controls.Add(this.buttonSaveLog);
@@ -122,6 +134,7 @@
         private System.Windows.Forms.Button buttonMute;
         private System.Windows.Forms.Button buttonSaveLog;
         private System.Windows.Forms.Button buttonClearLog;
+        private System.Windows.Forms.Button buttonTest;
     }
 }
 

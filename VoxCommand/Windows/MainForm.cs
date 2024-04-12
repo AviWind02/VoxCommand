@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using VoxCommand.Misx_Class;
+using VoxCommand.Other_Class;
 using VoxCommand.Speech_Class;
 
 namespace VoxCommand
@@ -74,5 +75,9 @@ namespace VoxCommand
             richTextBoxLog.Clear();
         }
 
+        private void buttonTest_Click(object sender, EventArgs e)
+        {
+            new VolumeControl().LowerVolume();
+        }
     }
 }

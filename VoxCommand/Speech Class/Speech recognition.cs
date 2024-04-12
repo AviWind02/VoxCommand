@@ -220,16 +220,28 @@ namespace VoxCommand.Speech_Class
             };
 
             // Special commands that don't directly map to an executable
+
+            appCommands.Add("Play", null);
+            appCommands.Add("Pause", null);
+            appCommands.Add("Skip", null);
+            appCommands.Add("next song", null);
+            appCommands.Add("Go back", null);
+
+
             appCommands.Add("show me steam games", null);
             appCommands.Add("list steam games", null);
             appCommands.Add("show steam games", null);
             appCommands.Add("show me steam library", null);
             appCommands.Add("list steam library", null);
             appCommands.Add("show steam library", null);
+            
             appCommands.Add("show desktop", null);
+            
             appCommands.Add("search", null);
             appCommands.Add("search for", null);
             appCommands.Add("search up", null);
+
+
 
         }
 
