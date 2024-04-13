@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using VoxCommand.Other_Class;
 using System.Threading;
+using VoxCommand.MediaControl_Class;
 
 namespace VoxCommand.Speech_Class
 {
@@ -142,10 +143,17 @@ namespace VoxCommand.Speech_Class
                     commandProcessed = true;
                     commandProcessedSearch = true;
                 }
-                else if (command.StartsWith("increase volume") || command.StartsWith("decrease volume") || command.StartsWith("set volume to") || command.StartsWith("mute volume") || command.StartsWith("unmute volume"))
+                else if (command.StartsWith("increase volume") || command.StartsWith("decrease volume") 
+                    || command.StartsWith("set volume to") || command.StartsWith("mute volume") || command.StartsWith("unmute volume"))
                 {
                     VolumeControl.AdjustVolumeBasedOnCommand(command); 
                 }
+                else if (command.StartsWith("play media") || command.StartsWith("pause media") 
+                    || command.StartsWith("next song") || command.StartsWith("skip song") || command.StartsWith("previous song"))
+                {
+                    PlaybackControl.AdjustMediaBasedOnCommand(command);
+                }
+                
                 else if (command.StartsWith("show me") || command.StartsWith("list") || command.StartsWith("show"))
                 {
 
@@ -232,19 +240,22 @@ namespace VoxCommand.Speech_Class
                 { "steam", @"C:\Program Files (x86)\Steam\steam.exe" },
                 { "spotify", @"C:\Users\gilla\AppData\Roaming\Spotify\Spotify.exe" },
                 { "file explorer", "explorer" },
-                { "cyberpunk", @"D:\2077\Cyberpunk 2077\REDprelauncher.exe" }
+                { "cyberpunk", @"D:\2077\Cyberpunk 2077\REDprelauncher.exe" },
+                { "task manager", "taskmgr.exe" }
 
 
             };
 
             // Special commands that don't directly map to an executable
 
-            appCommands.Add("Play", null);
-            appCommands.Add("Pause", null);
-            appCommands.Add("Skip", null);
+            //Media
+            appCommands.Add("play media", null);
+            appCommands.Add("pause media", null);
             appCommands.Add("next song", null);
-            appCommands.Add("Go back", null);
+            appCommands.Add("skip song", null);
+            appCommands.Add("previous song", null);
 
+            //Volume
             appCommands.Add("increase volume by", "VOL_EXECUTABLE");
             appCommands.Add("lower volume by", "VOL_EXECUTABLE");
             appCommands.Add("set volume to", "VOL_EXECUTABLE");
@@ -254,7 +265,7 @@ namespace VoxCommand.Speech_Class
             appCommands.Add("unmute volume", null);
 
 
-
+            //Steam
             appCommands.Add("show me steam games", null);
             appCommands.Add("list steam games", null);
             appCommands.Add("show steam games", null);
@@ -262,17 +273,17 @@ namespace VoxCommand.Speech_Class
             appCommands.Add("list steam library", null);
             appCommands.Add("show steam library", null);
             
-            appCommands.Add("show desktop", null);
-            
+            //Search Online
             appCommands.Add("search", null);
             appCommands.Add("search for", null);
             appCommands.Add("search up", null);
 
-
+            //Msic
+            appCommands.Add("show desktop", null);
 
         }
 
-   
+
 
         private static string RemoveCommandPrefix(string command, string[] prefixes)
         {

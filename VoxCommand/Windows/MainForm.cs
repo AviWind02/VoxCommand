@@ -8,7 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VoxCommand.MediaControl_Class;
 using VoxCommand.Misx_Class;
+using VoxCommand.News_Class;
 using VoxCommand.Other_Class;
 using VoxCommand.Speech_Class;
 
@@ -21,9 +23,9 @@ namespace VoxCommand
         public MainForm()
         {
             InitializeComponent();
-            buttonMute.BackColor = Color.White;
-            RichTextBoxStreamWriter richTextBoxStreamWriter = new RichTextBoxStreamWriter(richTextBoxLog);
-            Console.SetOut(richTextBoxStreamWriter);
+            //buttonMute.BackColor = Color.White;
+            //RichTextBoxStreamWriter richTextBoxStreamWriter = new RichTextBoxStreamWriter(richTextBoxLog);
+            //Console.SetOut(richTextBoxStreamWriter);
         }
 
         private void buttonSaveLog_Click(object sender, EventArgs e)
@@ -77,7 +79,8 @@ namespace VoxCommand
 
         private void buttonTest_Click(object sender, EventArgs e)
         {
-            new VolumeControl().LowerVolume();
+                        new OpenAiService().SummarizeWeatherAsync("location: New York, date: 2024-04-15, temperature: 18°C, condition: Partly Cloudy, humidity: 55%, wind speed: 15 km/h, wind direction: NE, forecast: [date: 2024-04-16, high: 21°C, low: 10°C, condition: Rainy; date: 2024-04-17, high: 19°C, low: 9°C, condition: Cloudy; date: 2024-04-18, high: 22°C, low: 12°C, condition: Sunny]");
+
         }
     }
 }
