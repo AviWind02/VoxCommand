@@ -121,11 +121,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API Class\NewsService.cs" />
+    <Compile Include="API Class\WeatherServices.cs" />
     <Compile Include="MediaControl Class\PlaybackControl.cs" />
     <Compile Include="MediaControl Class\VolumeControl.cs" />
-    <Compile Include="News Class\NewsScraper.cs" />
-    <Compile Include="Other Class\OpenAiService.cs" />
-    <Compile Include="Speech Class\APIKey.cs" />
+    <Compile Include="API Class\OpenAiService.cs" />
+    <Compile Include="API Class\APIKey.cs" />
+    <Compile Include="Other Class\WebScraper.cs" />
     <Compile Include="Windows\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

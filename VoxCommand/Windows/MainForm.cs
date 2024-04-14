@@ -8,9 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using VoxCommand.MediaControl_Class;
-using VoxCommand.Misx_Class;
-using VoxCommand.News_Class;
+using VoxCommand.API_Class;
 using VoxCommand.Other_Class;
 using VoxCommand.Speech_Class;
 
@@ -77,9 +75,19 @@ namespace VoxCommand
             richTextBoxLog.Clear();
         }
 
-        private void buttonTest_Click(object sender, EventArgs e)
+        private async void buttonTest_Click(object sender, EventArgs e)
         {
-                        new OpenAiService().SummarizeWeatherAsync("location: New York, date: 2024-04-15, temperature: 18°C, condition: Partly Cloudy, humidity: 55%, wind speed: 15 km/h, wind direction: NE, forecast: [date: 2024-04-16, high: 21°C, low: 10°C, condition: Rainy; date: 2024-04-17, high: 19°C, low: 9°C, condition: Cloudy; date: 2024-04-18, high: 22°C, low: 12°C, condition: Sunny]");
+            //string a = await new WeatherServices().GetFormattedWeatherDataAsync("OrangeVille");
+            //await new OpenAiService().SummarizeWeatherAsync(a);
+
+            //string a = await new NewsService().FetchTopHeadlinesAsync();
+            //await new OpenAiService().SummarizeNewsAsync(a);
+            string combinedDetails = String.Join(" ", new WebScraper().NewsScraper());
+            //await new OpenAiService().SummarizeNewsAsync(combinedDetails);
+            Console.WriteLine($"Data Combined being sent: {combinedDetails}");
+            await new OpenAiService().SummarizeNewsAsync(combinedDetails);
+
+
 
         }
     }

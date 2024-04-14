@@ -23,13 +23,13 @@ public class OpenAiService
     public async Task<string> SummarizeNewsAsync(string newsContent)
     {
         Console.WriteLine("Summarizing news...");
-        return await SummarizeTextAsync(newsContent, "Tell me what's going on in the world like Jarvis would.");
+        return await SummarizeTextAsync(newsContent, "Using ALL the text provided, please summarize ALL the points about the ALL events in ALL the headline provided. Focus on extracting important points and insights directly from the text to give a clear understanding of the situations. Do not provide information beyond 2021 or training data . Deliver the information in a style reminiscent of Jarvis from Ironman, with a concise, intelligent, and helpful tone. Dont use format, just text for speech");
     }
 
     public async Task<string> SummarizeWeatherAsync(string weatherContent)
     {
         Console.WriteLine("Summarizing weather...");
-        return await SummarizeTextAsync(weatherContent, "Give me a weather update like Jarvis would, .");
+        return await SummarizeTextAsync(weatherContent, "Give me a weather update like Jarvis from ironman would. My name is Avi, also recommend if I'm going out what i should wear.");
     }
 
     private async Task<string> SummarizeTextAsync(string content, string instruction)
