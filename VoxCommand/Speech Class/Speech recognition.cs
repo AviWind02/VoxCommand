@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using VoxCommand.Other_Class;
 using System.Threading;
 using VoxCommand.MediaControl_Class;
+using System.Speech.Synthesis;
 
 namespace VoxCommand.Speech_Class
 {
@@ -198,6 +199,9 @@ namespace VoxCommand.Speech_Class
 
         }
 
+
+
+
         private static void MsRecognizer_Recognized(object sender, Microsoft.CognitiveServices.Speech.SpeechRecognitionEventArgs e)
         {
 
@@ -283,7 +287,34 @@ namespace VoxCommand.Speech_Class
 
         }
 
+        public async Task SynthesizeAudioAsync(string text)
+        {
+            var config = SpeechConfig.FromSubscription(new APIKey().getAPIKey(), "eastus");
+            config.SpeechSynthesisVoiceName = "en-GB-RyanNeural"; // British accent
 
+            using (var synthesizer = new Microsoft.CognitiveServices.Speech.SpeechSynthesizer(config))
+            {
+                using (var result = await synthesizer.SpeakTextAsync(text))
+                {
+                    if (result.Reason == ResultReason.SynthesizingAudioCompleted)
+                    {
+                        Console.WriteLine($"Speech synthesized to speaker for text: {text}");
+                    }
+                    else if (result.Reason == ResultReason.Canceled)
+                    {
+                        var cancellation = SpeechSynthesisCancellationDetails.FromResult(result);
+                        Console.WriteLine($"CANCELED: Reason={cancellation.Reason}");
+
+                        if (cancellation.Reason == CancellationReason.Error)
+                        {
+                            Console.WriteLine($"CANCELED: ErrorCode={cancellation.ErrorCode}");
+                            Console.WriteLine($"CANCELED: ErrorDetails={cancellation.ErrorDetails}");
+                            Console.WriteLine($"CANCELED: Did you update the subscription info?");
+                        }
+                    }
+                }
+            }
+        }
 
         private static string RemoveCommandPrefix(string command, string[] prefixes)
         {

@@ -23,7 +23,7 @@ public class OpenAiService
     public async Task<string> SummarizeNewsAsync(string newsContent)
     {
         Console.WriteLine("Summarizing news...");
-        return await SummarizeTextAsync(newsContent, "Using ALL the text provided, please summarize ALL the points about the ALL events in ALL the headline provided. Focus on extracting important points and insights directly from the text to give a clear understanding of the situations. Do not provide information beyond 2021 or training data . Deliver the information in a style reminiscent of Jarvis from Ironman, with a concise, intelligent, and helpful tone. Dont use format, just text for speech");
+        return await SummarizeTextAsync(newsContent, "Could you tell me Using ALL the text provided, please summarize ALL the points about the ALL events in ALL the headline provided. Focus on extracting important points and insights directly from the text to give a clear understanding of the situations. Do not provide information beyond 2021 or training data . Deliver the information in a style reminiscent of Jarvis from Ironman, with a concise, intelligent, and helpful tone. Dont use format, just text for speech");
     }
 
     public async Task<string> SummarizeWeatherAsync(string weatherContent)
@@ -67,7 +67,7 @@ public class OpenAiService
             Console.WriteLine($"Memory used: {finalMemory - initialMemory} bytes");
 
             Console.WriteLine($"Output: {messageContent.Trim()}");
-            Speech_recognition.synthesizer.SpeakAsync(messageContent.Trim());
+           await new Speech_recognition().SynthesizeAudioAsync(messageContent.Trim());
 
             return messageContent.Trim();
         }

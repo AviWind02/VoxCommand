@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using VoxCommand.API_Class;
 using VoxCommand.Other_Class;
 using VoxCommand.Speech_Class;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace VoxCommand
 {
@@ -36,7 +37,7 @@ namespace VoxCommand
         {
             string timestamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
             string filename = $"VoxCommand - {timestamp}.log";
-            string path = Path.Combine(Application.StartupPath, filename);
+            string path = Path.Combine(System.Windows.Forms.Application.StartupPath, filename);
 
             try
             {
@@ -66,7 +67,7 @@ namespace VoxCommand
 
         private void buttonExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
             Environment.Exit(1);
         }
 
@@ -86,7 +87,7 @@ namespace VoxCommand
             //await new OpenAiService().SummarizeNewsAsync(combinedDetails);
             Console.WriteLine($"Data Combined being sent: {combinedDetails}");
             await new OpenAiService().SummarizeNewsAsync(combinedDetails);
-
+            //await new Speech_recognition().SynthesizeAudioAsync("Sir, the suit's power levels are optimally charged, and all systems are functioning at peak efficiency. Shall we proceed with the test flight, or is there another task you'd like to prioritize today?");
 
 
         }
