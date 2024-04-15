@@ -145,24 +145,24 @@ namespace VoxCommand.MediaControl_Class
             if (command.Contains("play media") || command.Contains("pause media"))
             {
                 playbackControl.PlayPauseMedia();
-                Speech_recognition.synthesizer.Speak("Play/Pausing Media.");
+                SpeechRecognition.synthesizer.Speak("Play/Pausing Media.");
                 Console.WriteLine("Play/Pausing Media.");
             }
             else if (command.Contains("next song") || command.Contains("skip song"))
             {
                 playbackControl.NextTrackMedia();
-                Speech_recognition.synthesizer.Speak("Playing Next Track.");
+                SpeechRecognition.synthesizer.Speak("Playing Next Track.");
                 Console.WriteLine("Playing Next Track.");
             }
             else if (command.Contains("previous song"))
             {
                 playbackControl.PreviousTrackMedia();
-                Speech_recognition.synthesizer.Speak("Playing Previous Track.");
+                SpeechRecognition.synthesizer.Speak("Playing Previous Track.");
                 Console.WriteLine("Playing Previous Track.");
             }
             else
             {
-                Speech_recognition.synthesizer.Speak("Could not determine the audio change action required.");
+                SpeechRecognition.synthesizer.Speak("Could not determine the audio change action required.");
                 return;
             }
 

@@ -52,7 +52,7 @@ namespace VoxCommand
 
         private void buttonMute_Click(object sender, EventArgs e)
         {
-            Speech_recognition speechRecognition = new Speech_recognition();
+            SpeechRecognition speechRecognition = new SpeechRecognition();
 
             muteInput = !muteInput;
 
@@ -60,9 +60,9 @@ namespace VoxCommand
             buttonMute.BackColor = muteInput ? Color.Orange : Color.White;
             buttonMute.Text = muteInput ? "Unmute" : "Mute";
 
-            // Assuming you have an existing instance of Speech_recognition
+            // Assuming you have an existing instance of SpeechRecognition
             // Update its mute state
-            speechRecognition.muteSpeech(muteInput);  // Make sure you have such a method in Speech_recognition
+            speechRecognition.muteSpeech(muteInput);  // Make sure you have such a method in SpeechRecognition
         }
 
         private void buttonExit_Click(object sender, EventArgs e)
@@ -82,14 +82,8 @@ namespace VoxCommand
             //await new OpenAiService().SummarizeWeatherAsync(a);
 
             //string a = await new NewsService().FetchTopHeadlinesAsync();
-            //await new OpenAiService().SummarizeNewsAsync(a);
-            string combinedDetails = String.Join(" ", new WebScraper().NewsScraper());
+            //await new OpenAiService().SummarizeNewsAsync(a);NewsScraper_Headlines()
             //await new OpenAiService().SummarizeNewsAsync(combinedDetails);
-            Console.WriteLine($"Data Combined being sent: {combinedDetails}");
-            await new OpenAiService().SummarizeNewsAsync(combinedDetails);
-            //await new Speech_recognition().SynthesizeAudioAsync("Sir, the suit's power levels are optimally charged, and all systems are functioning at peak efficiency. Shall we proceed with the test flight, or is there another task you'd like to prioritize today?");
-
-
         }
     }
 }

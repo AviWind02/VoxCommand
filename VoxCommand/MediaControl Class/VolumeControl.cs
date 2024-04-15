@@ -78,43 +78,43 @@ namespace VoxCommand.Other_Class
             {
                 newVolume = currentVolume + (currentVolume * (volumeChangePercentage / 100.0));
                 newVolume = Math.Min(newVolume, 100); // Ensure the volume does not exceed 100%
-                Speech_recognition.synthesizer.Speak($"Increasing volume by {volumeChangePercentage}%, new volume: {Math.Round(newVolume)}%.");
+                SpeechRecognition.synthesizer.Speak($"Increasing volume by {volumeChangePercentage}%, new volume: {Math.Round(newVolume)}%.");
             }
             else if (command.Contains("decrease volume"))
             {
                 newVolume = currentVolume - (currentVolume * (volumeChangePercentage / 100.0));
                 newVolume = Math.Max(newVolume, 0); // Ensure the volume does not go below 0%
-                Speech_recognition.synthesizer.Speak($"Decreasing volume by {volumeChangePercentage}%, new volume: {Math.Round(newVolume)}%.");
+                SpeechRecognition.synthesizer.Speak($"Decreasing volume by {volumeChangePercentage}%, new volume: {Math.Round(newVolume)}%.");
             }
             else if(command.Contains("set volume"))
             {
-                Speech_recognition.synthesizer.Speak($"Setting volume to {volumeChangePercentage}%.");
+                SpeechRecognition.synthesizer.Speak($"Setting volume to {volumeChangePercentage}%.");
                 newVolume = volumeChangePercentage;
             }
             else if (command.Contains("mute volume"))
             {
                 if(volumeControl.defaultPlaybackDevice.IsMuted)
                 {
-                    Speech_recognition.synthesizer.Speak($"Volume already muted.");
+                    SpeechRecognition.synthesizer.Speak($"Volume already muted.");
                     return;
                 }
 
-                Speech_recognition.synthesizer.Speak($"muting volume.");
+                SpeechRecognition.synthesizer.Speak($"muting volume.");
                 volumeControl.MuteVolume(true);
             }
             else if (command.Contains("unmute volume"))
             {
                 if (!volumeControl.defaultPlaybackDevice.IsMuted)
                 {
-                    Speech_recognition.synthesizer.Speak($"Volume already unmuted.");
+                    SpeechRecognition.synthesizer.Speak($"Volume already unmuted.");
                     return;
                 }
-                Speech_recognition.synthesizer.Speak($"unmuting volume.");
+                SpeechRecognition.synthesizer.Speak($"unmuting volume.");
                 volumeControl.MuteVolume(false);
             }
             else
             {
-                Speech_recognition.synthesizer.Speak("Could not determine the volume change action required.");
+                SpeechRecognition.synthesizer.Speak("Could not determine the volume change action required.");
                 Console.WriteLine("No action (increase/decrease) specified in the command.");
                 return;
             }

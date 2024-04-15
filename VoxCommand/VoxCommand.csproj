@@ -141,7 +141,7 @@
     <Compile Include="Retriever Class\SteamGamesRetriever.cs" />
     <Compile Include="Speech Class\AppCommand.cs" />
     <Compile Include="Speech Class\Executables.cs" />
-    <Compile Include="Speech Class\Speech recognition.cs" />
+    <Compile Include="Speech Class\SpeechRecognition.cs" />
     <EmbeddedResource Include="Windows\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

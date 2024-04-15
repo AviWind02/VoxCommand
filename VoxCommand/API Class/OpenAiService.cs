@@ -23,13 +23,13 @@ public class OpenAiService
     public async Task<string> SummarizeNewsAsync(string newsContent)
     {
         Console.WriteLine("Summarizing news...");
-        return await SummarizeTextAsync(newsContent, "Could you tell me Using ALL the text provided, please summarize ALL the points about the ALL events in ALL the headline provided. Focus on extracting important points and insights directly from the text to give a clear understanding of the situations. Do not provide information beyond 2021 or training data . Deliver the information in a style reminiscent of Jarvis from Ironman, with a concise, intelligent, and helpful tone. Dont use format, just text for speech");
+        return await SummarizeTextAsync(newsContent, "Could you take this text and format it into a text that I will read as a British man acting as a butler");
     }
 
     public async Task<string> SummarizeWeatherAsync(string weatherContent)
     {
         Console.WriteLine("Summarizing weather...");
-        return await SummarizeTextAsync(weatherContent, "Give me a weather update like Jarvis from ironman would. My name is Avi, also recommend if I'm going out what i should wear.");
+        return await SummarizeTextAsync(weatherContent, "Could you take this weather update provided and format it into a text that will read as British man acting as butler, Doesn't need be long, The time is 12:00am.");//Broken Eng to save Token........
     }
 
     private async Task<string> SummarizeTextAsync(string content, string instruction)
@@ -67,7 +67,7 @@ public class OpenAiService
             Console.WriteLine($"Memory used: {finalMemory - initialMemory} bytes");
 
             Console.WriteLine($"Output: {messageContent.Trim()}");
-           await new Speech_recognition().SynthesizeAudioAsync(messageContent.Trim());
+           await new SpeechRecognition().SynthesizeAudioAsync(messageContent.Trim());
 
             return messageContent.Trim();
         }

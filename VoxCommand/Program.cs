@@ -23,7 +23,7 @@ namespace VoxCommand
         {
   
             Console.WriteLine("Start");
-            var speechTask = new Speech_recognition().run(); // Start the speech recognition task
+            var speechTask = new SpeechRecognition().run(); // Start the speech recognition task
             steamGamesRetriever = new SteamGamesRetriever();// Trying to get all steam games from all steams lib(Drives) on the computer
             steamGamesRetriever.run();
 

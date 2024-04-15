@@ -15,7 +15,7 @@ using System.Speech.Synthesis;
 
 namespace VoxCommand.Speech_Class
 {
-    internal class Speech_recognition
+    internal class SpeechRecognition
     {
 
         private Executables executablesclass;
@@ -23,7 +23,7 @@ namespace VoxCommand.Speech_Class
         public static System.Speech.Synthesis.SpeechSynthesizer synthesizer;
         private static Dictionary<string, string> appCommands;
         private static List<string> grammarPhrases = new List<string>();
-
+        private static bool voxWake = false;
         private static Microsoft.CognitiveServices.Speech.SpeechRecognizer msRecognizer;
         private static System.Speech.Recognition.SpeechRecognitionEngine recognizer;
         private static bool commandProcessed = false; //Flag to indicate command processing
@@ -35,7 +35,7 @@ namespace VoxCommand.Speech_Class
         {
             _muteInput = muteInput;
         }
-        public Speech_recognition()
+        public SpeechRecognition()
         {
         }
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -125,12 +125,23 @@ namespace VoxCommand.Speech_Class
         {
             if (_muteInput)
                 return;
+
             Console.WriteLine($"System.Speech recognized: {e.Result.Text}");
             string command = e.Result.Text.ToLowerInvariant();
 
+            if (command.StartsWith("hey vox") || command.StartsWith("oi vox") || command.StartsWith("vox"))
+            {
+                voxWake = true;
+                new SpeechRecognition().SynthesizeAudioAsync("At your service, Sir.");
+            }
+
+            if (!voxWake)
+                return;
+
             Console.WriteLine($"Processing command: {command}");
 
-            if (appCommands.ContainsKey(command) || grammarPhrases.Contains(command))
+            if ((appCommands.ContainsKey(command) || grammarPhrases.Contains(command)) 
+                && !(command.StartsWith("hey vox") || command.StartsWith("oi vox") || command.StartsWith("vox")))
             {
 
                 Console.WriteLine($"Command found in appCommands: {command}");
@@ -142,19 +153,31 @@ namespace VoxCommand.Speech_Class
                     Console.WriteLine("Search command detected. Asking for search query...");
                     synthesizer.Speak("What would you like to search for?");
                     commandProcessed = true;
+                    voxWake = false;
                     commandProcessedSearch = true;
                 }
                 else if (command.StartsWith("increase volume") || command.StartsWith("decrease volume") 
                     || command.StartsWith("set volume to") || command.StartsWith("mute volume") || command.StartsWith("unmute volume"))
                 {
-                    VolumeControl.AdjustVolumeBasedOnCommand(command); 
+                    VolumeControl.AdjustVolumeBasedOnCommand(command);
+                    commandProcessed = true;
+                    voxWake = false;
                 }
                 else if (command.StartsWith("play media") || command.StartsWith("pause media") 
                     || command.StartsWith("next song") || command.StartsWith("skip song") || command.StartsWith("previous song"))
                 {
                     PlaybackControl.AdjustMediaBasedOnCommand(command);
+                    commandProcessed = true;
+                    voxWake = false;
                 }
-                
+                else if (command.StartsWith("what's the latest news") || command.StartsWith("update me on today's news") ||
+                         command.StartsWith("tell me what's happening in the world today") || command.StartsWith("give me news updates"))
+                {
+                    new WebScraper().GetHeadLineUpdates();
+                    commandProcessed = true;
+                    voxWake = false;
+                }
+
                 else if (command.StartsWith("show me") || command.StartsWith("list") || command.StartsWith("show"))
                 {
 
@@ -163,6 +186,8 @@ namespace VoxCommand.Speech_Class
                         Console.WriteLine("Steam command detected. Retrieving Steam games...");
                         Program.getSteamGamesRetriever().showLib();
                         commandProcessed = true;
+                        voxWake = false;
+
                     }
 
                 }
@@ -189,12 +214,15 @@ namespace VoxCommand.Speech_Class
                         Console.WriteLine("Incomplete command.");
                     }
                     commandProcessed = true;
+                    voxWake = false;
                 }
             }
             else
             {
                 Console.WriteLine("Command not found in appCommands.");
             }
+            
+            Console.WriteLine($"Vox processed flag status: {voxWake}");
             Console.WriteLine($"Command processed flag status: {commandProcessed}");
 
         }
@@ -284,6 +312,18 @@ namespace VoxCommand.Speech_Class
 
             //Msic
             appCommands.Add("show desktop", null);
+
+
+            // general news commands
+            appCommands.Add("what's the latest news", null);
+            appCommands.Add("update me on today's news", null);
+            appCommands.Add("tell me what's happening in the world today", null);
+            appCommands.Add("give me news updates", null);
+
+            //Wake commend
+            appCommands.Add("hey vox", null);
+            appCommands.Add("oi vox", null);
+            appCommands.Add("vox", null);
 
         }
 

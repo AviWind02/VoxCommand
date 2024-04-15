@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Policy;
+using VoxCommand.Speech_Class;
 
 //This is using CNN if they ever change the HTML layout this is just trash, works for now but just gonna switch to an API
 namespace VoxCommand.Other_Class
@@ -14,8 +15,68 @@ namespace VoxCommand.Other_Class
     internal class WebScraper
     {
 
+        private List<Tuple<string, string>> NewsScraper_Headlines()
+        {
 
-        public List<string> NewsScraper()
+            List<Tuple<string, string>> newsItems = new List<Tuple<string, string>>();
+
+            Console.WriteLine("Initializing ChromeDriver with headless option...");
+            ChromeOptions options = new ChromeOptions();
+            options.AddArguments("headless"); // Run Chrome in headless mode
+            options.AddArguments("--disable-gpu"); // Disabling GPU acceleration if not needed
+            options.AddArguments("--no-sandbox"); // Bypass OS security model
+
+            try
+            {
+                using (var driver = new ChromeDriver(options))
+                {
+                    Console.WriteLine("Navigating to CNN...");
+                    driver.Navigate().GoToUrl("https://www.cnn.com/world");
+                    Console.WriteLine("Waiting for page to load...");
+                    driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+                    Console.WriteLine("Searching for news headlines...");
+                    var headlines = driver.FindElements(By.CssSelector("a.container__link"));
+                    foreach (var headline in headlines.Take(10)) // Only process the first 10 headlines
+                    {
+                        try
+                        {
+                            var headlineTextElement = headline.FindElement(By.CssSelector("span.container__headline-text"));
+                            string headlineText = headlineTextElement?.Text; // Using null-conditional operator to avoid null reference exception
+                            string url = headline.GetAttribute("href");
+
+                            if (!string.IsNullOrEmpty(headlineText) && !string.IsNullOrEmpty(url))
+                            {
+                                newsItems.Add(new Tuple<string, string>(headlineText, url));
+                                Console.WriteLine($"Found headline: {headlineText}");
+                            }
+                        }
+                        catch (NoSuchElementException)
+                        {
+                            // Log if specific element within link is not found
+                            Console.WriteLine("Headline text element not found within link, skipping...");
+                        }
+                    }
+                }
+            }
+            catch (WebDriverException ex)
+            {
+                Console.WriteLine($"WebDriver exception occurred: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("Closing the driver...");
+                // Driver is closed in the using block, but explicit close can be added here if not using 'using'
+            }
+
+            return newsItems;
+        }
+
+        private List<string> NewsScraper()
         {
             List<string> detailsList = new List<string>();
 
@@ -134,25 +195,19 @@ namespace VoxCommand.Other_Class
             }
 
             return detailsList;
-        }
+        }      
+        
 
-        public List<string> NewsDetailsScraper(string headline, string url)
+
+        public void GetHeadLineUpdates()
         {
-            Console.WriteLine("Initializing ChromeDriver with headless option...");
-            ChromeOptions options = new ChromeOptions();
-            options.AddArguments("headless");
-            options.AddArguments("--disable-gpu");
-            options.AddArguments("--no-sandbox");
-
-            List<string> detailsList = new List<string>();  // To store the unique details
-
-            using (var driver = new ChromeDriver(options))
-            {
-               
-            }
-
-            return detailsList;  // Return the list of collected unique details
+            new SpeechRecognition().SynthesizeAudioAsync("Certainly, sir. Allow me a moment to review some headlines for you.");
+            List<Tuple<string, string>> newsItems = NewsScraper_Headlines();
+            var headlines = newsItems.Select(item => item.Item1);
+            string combinedDetails = String.Join(" ", headlines);
+            new OpenAiService().SummarizeNewsAsync(combinedDetails);
         }
+
 
     }
 }
